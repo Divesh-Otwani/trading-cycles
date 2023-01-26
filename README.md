@@ -28,8 +28,15 @@ By using DAML and a backing blockchain, we ensure the following.
 
 The workflow is illustrated in `Main.daml` and documented throughout.
 
+## Docs
+
+The documentation is available [here][1] taken from `/docs`. It is rather
+sparse and a few pieces of intended documentation are not created and this
+needs to be fixed.
 
 ## Comments
 
 This problem generalizes to trading resources with approvals for those
 resources, but for now I limited the scope.
+
+[1]: https://divesh-otwani.github.io/trading-cycles/ 
