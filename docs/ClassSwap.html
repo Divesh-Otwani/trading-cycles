@@ -4,8 +4,19 @@
 <h2>Templates</h2>
 <p><a name="type-classswap-classswap-72105"></a><strong>template</strong> <a href="#type-classswap-classswap-72105">ClassSwap</a></p>
 <blockquote>
-<p>A contract affirming a student is authorized to swap
-one class for another and participate in cycle trades</p>
+<p>ClassSwap Workflow</p>
+<ol>
+<li>Student creates a pending class swap containing a swap with
+all the correct parties and their own signature. [If they try to
+create and use a bad swap, it won't be accepted by any valid cycle
+and no valid swap will join a cycle made by it. This is because
+additions to a cycle check for agreement of the registrar and professors
+across links.]</li>
+<li>Each party signs off</li>
+<li>The registrar creates the class swap subject to validity conditions.
+A contract affirming a student is authorized to swap
+one class for another and participate in cycle trades</li>
+</ol>
 <table>
 <thead>
 <tr>

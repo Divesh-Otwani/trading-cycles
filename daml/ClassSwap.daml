@@ -1,6 +1,15 @@
 module ClassSwap where
 
-{- = ClassSwap Workflow
+import Class (Class(..), ClassKey(..))
+import Data.Student (Student(..))
+
+import DA.Assert 
+import DA.Set (Set)
+import qualified DA.Set as Set 
+
+{- | 
+
+ClassSwap Workflow
 
 1. Student creates a pending class swap containing a swap with 
 all the correct parties and their own signature. [If they try to
@@ -12,13 +21,6 @@ across links.]
 3. The registrar creates the class swap subject to validity conditions.
 
 -}
-
-import Class (Class(..), ClassKey(..))
-import Data.Student (Student(..))
-
-import DA.Assert 
-import DA.Set (Set)
-import qualified DA.Set as Set 
 
 -- | A contract affirming a student is authorized to swap
 -- one class for another and participate in cycle trades

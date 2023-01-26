@@ -1,15 +1,18 @@
-module Cycle where
-
-{- = Cycle Workflow
-
-1. Some student creates a cycle proposal holding a cycle contract with all the 
-expected trades
-2. All students sign off, once per transfer they are involved in,
-and add their corresponding ClassSwap.
-3. The registrar makes a Cycle
-4. The registrar trys to execute the Cycle and if it fails, just archives it
-
--}
+module Cycle 
+    ( 
+    -- * Cycles
+    ClassTransfer (..)
+    , Cycle (..)
+    , TryExecute (..)
+    -- Pending Cycles
+    , TransferWitness (..)
+    , CyclePending (..)
+    , CyclePending_RegistrarSign (..)
+    , CyclePending_TransferSign (..)
+    , CyclePending_Abort (..)
+    , CyclePending_Finalize (..)
+    )
+where
 
 import Class 
 import ClassSwap
@@ -24,6 +27,20 @@ import DA.Map (Map)
 import qualified DA.Map as Map 
 import DA.Foldable (mapA_)
 import DA.Functor (void)
+
+{- |
+
+Cycle Workflow
+
+1. Some student creates a cycle proposal holding a cycle contract with all the 
+expected trades
+2. All students sign off, once per transfer they are involved in,
+and add their corresponding ClassSwap.
+3. The registrar makes a Cycle
+4. The registrar trys to execute the Cycle and if it fails, just archives it
+
+-}
+
 
 -- | A lightweight represenation of a student's
 -- transfer of losing a class they have and gaining

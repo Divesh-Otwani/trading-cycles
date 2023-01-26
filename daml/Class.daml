@@ -6,13 +6,16 @@ import Data.Student (Student)
 import DA.Set (Set)
 import qualified DA.Set as Set 
 
-{- | A Class Template
+{- | 
+
+    A Class Template
 
     Class contracts represent classes that exist for the current semester.
     The registrar can create a class, swap students, finialize the registration, or archive it
     after the semester is over.
 
 -}
+
 template Class
     with
         bio : ClassBio
