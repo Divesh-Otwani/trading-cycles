@@ -1,0 +1,250 @@
+<html>
+<head><title>trading-cycles</title><meta charset="utf-8"></head>
+<body><h1><a name="module-cycle-6218"></a>Module Cycle</h1>
+<h2>Templates</h2>
+<p><a name="type-cycle-cycle-39369"></a><strong>template</strong> <a href="#type-cycle-cycle-39369">Cycle</a></p>
+<blockquote>
+<p>A Cycle of trades, that if valid can be performed</p>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">transfers</td>
+<td align="left">[<a href="#type-cycle-classtransfer-9450">ClassTransfer</a>]</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">matchingSwaps</td>
+<td align="left">Map <a href="#type-cycle-classtransfer-9450">ClassTransfer</a> (ContractId <a href="ClassSwap.html#type-classswap-classswap-72105">ClassSwap</a>)</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">registrar</td>
+<td align="left">Party</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>
+<p><strong>Choice Archive</strong></p>
+<p>(no fields)</p>
+</li>
+<li>
+<p><strong>Choice TryExecute</strong></p>
+<p>(no fields)</p>
+</li>
+</ul>
+</blockquote>
+<p><a name="type-cycle-cyclepending-36783"></a><strong>template</strong> <a href="#type-cycle-cyclepending-36783">CyclePending</a></p>
+<blockquote>
+<p>A contract for making a cycle once each
+ClassTransfer has a corresponding ContractId ClassSwap
+and all the signatories have been added to haveSigned
+(including the registrar)</p>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">cycle</td>
+<td align="left"><a href="#type-cycle-cycle-39369">Cycle</a></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">haveSigned</td>
+<td align="left">Set Party</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>
+<p><strong>Choice Archive</strong></p>
+<p>(no fields)</p>
+</li>
+<li>
+<p><strong>Choice CyclePending_Abort</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">party</td>
+<td align="left">Party</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p><strong>Choice CyclePending_Finalize</strong></p>
+<p>(no fields)</p>
+</li>
+<li>
+<p><strong>Choice CyclePending_RegistrarSign</strong></p>
+<p>(no fields)</p>
+</li>
+<li>
+<p><strong>Choice CyclePending_TransferSign</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">witness</td>
+<td align="left"><a href="#type-cycle-transferwitness-69795">TransferWitness</a></td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+</blockquote>
+<h2>Data Types</h2>
+<p><a name="type-cycle-classtransfer-9450"></a><strong>data</strong> <a href="#type-cycle-classtransfer-9450">ClassTransfer</a></p>
+<blockquote>
+<p>A lightweight represenation of a student's
+transfer of losing a class they have and gaining
+a class they want</p>
+<p><a name="constr-cycle-classtransfer-61329"></a><a href="#constr-cycle-classtransfer-61329">ClassTransfer</a></p>
+<blockquote>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">student</td>
+<td align="left"><a href="Data-Student.html#type-data-student-student-55208">Student</a></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">have</td>
+<td align="left"><a href="Class.html#type-class-classkey-47315">ClassKey</a></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">want</td>
+<td align="left"><a href="Class.html#type-class-classkey-47315">ClassKey</a></td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p><strong>instance</strong> Eq <a href="#type-cycle-classtransfer-9450">ClassTransfer</a></p>
+<p><strong>instance</strong> Ord <a href="#type-cycle-classtransfer-9450">ClassTransfer</a></p>
+<p><strong>instance</strong> Show <a href="#type-cycle-classtransfer-9450">ClassTransfer</a></p>
+<p><strong>instance</strong> HasField &quot;have&quot; <a href="#type-cycle-classtransfer-9450">ClassTransfer</a> <a href="Class.html#type-class-classkey-47315">ClassKey</a></p>
+<p><strong>instance</strong> HasField &quot;matchingSwaps&quot; <a href="#type-cycle-cycle-39369">Cycle</a> (Map <a href="#type-cycle-classtransfer-9450">ClassTransfer</a> (ContractId <a href="ClassSwap.html#type-classswap-classswap-72105">ClassSwap</a>))</p>
+<p><strong>instance</strong> HasField &quot;student&quot; <a href="#type-cycle-classtransfer-9450">ClassTransfer</a> <a href="Data-Student.html#type-data-student-student-55208">Student</a></p>
+<p><strong>instance</strong> HasField &quot;transfer&quot; <a href="#type-cycle-transferwitness-69795">TransferWitness</a> <a href="#type-cycle-classtransfer-9450">ClassTransfer</a></p>
+<p><strong>instance</strong> HasField &quot;transfers&quot; <a href="#type-cycle-cycle-39369">Cycle</a> [<a href="#type-cycle-classtransfer-9450">ClassTransfer</a>]</p>
+<p><strong>instance</strong> HasField &quot;want&quot; <a href="#type-cycle-classtransfer-9450">ClassTransfer</a> <a href="Class.html#type-class-classkey-47315">ClassKey</a></p>
+</blockquote>
+<p><a name="type-cycle-transferwitness-69795"></a><strong>data</strong> <a href="#type-cycle-transferwitness-69795">TransferWitness</a></p>
+<blockquote>
+<p>A witness by which a ClassTransfer is validated
+This is not checked upon adding it to a cycle, but on executing</p>
+<p><a name="constr-cycle-transferwitness-72100"></a><a href="#constr-cycle-transferwitness-72100">TransferWitness</a></p>
+<blockquote>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">swapId</td>
+<td align="left">ContractId <a href="ClassSwap.html#type-classswap-classswap-72105">ClassSwap</a></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">transfer</td>
+<td align="left"><a href="#type-cycle-classtransfer-9450">ClassTransfer</a></td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p><strong>instance</strong> Eq <a href="#type-cycle-transferwitness-69795">TransferWitness</a></p>
+<p><strong>instance</strong> Ord <a href="#type-cycle-transferwitness-69795">TransferWitness</a></p>
+<p><strong>instance</strong> Show <a href="#type-cycle-transferwitness-69795">TransferWitness</a></p>
+<p><strong>instance</strong> HasField &quot;swapId&quot; <a href="#type-cycle-transferwitness-69795">TransferWitness</a> (ContractId <a href="ClassSwap.html#type-classswap-classswap-72105">ClassSwap</a>)</p>
+<p><strong>instance</strong> HasField &quot;transfer&quot; <a href="#type-cycle-transferwitness-69795">TransferWitness</a> <a href="#type-cycle-classtransfer-9450">ClassTransfer</a></p>
+<p><strong>instance</strong> HasField &quot;witness&quot; CyclePending_TransferSign <a href="#type-cycle-transferwitness-69795">TransferWitness</a></p>
+</blockquote>
+<h2>Functions</h2>
+<p><a name="function-cycle-swappairvalid-79994"></a><a href="#function-cycle-swappairvalid-79994">swapPairValid</a></p>
+<blockquote>
+<p>: Party -&gt; (<a href="#type-cycle-classtransfer-9450">ClassTransfer</a>, ContractId <a href="ClassSwap.html#type-classswap-classswap-72105">ClassSwap</a>) -&gt; Update ()</p>
+<p>Check that the swap exists, that it matches the transfer by the (want, have,
+student) fields, that the registrar is the one in the cycle, and that the swap
+has it's own integrity (see @ClassSwap.validateSwap@).</p>
+</blockquote>
+<p><a name="function-cycle-executecycle-47293"></a><a href="#function-cycle-executecycle-47293">executeCycle</a></p>
+<blockquote>
+<p>: [<a href="#type-cycle-classtransfer-9450">ClassTransfer</a>] -&gt; Update ()</p>
+<p>Drop and add classes according to the transfers,
+failing if the class state has changed in the meantime</p>
+</blockquote>
+<p><a name="function-cycle-partiesoftransfers-3799"></a><a href="#function-cycle-partiesoftransfers-3799">partiesOfTransfers</a></p>
+<blockquote>
+<p>: [<a href="#type-cycle-classtransfer-9450">ClassTransfer</a>] -&gt; Set Party</p>
+<p>Get all the students parties in a list of class transfers</p>
+</blockquote>
+<p><a name="function-cycle-validtransfercycle-2329"></a><a href="#function-cycle-validtransfercycle-2329">validTransferCycle</a></p>
+<blockquote>
+<p>: [<a href="#type-cycle-classtransfer-9450">ClassTransfer</a>] -&gt; Bool</p>
+<p>A predicate on making sure a list of class transfers is valid
+in all properties</p>
+</blockquote>
+<p><a name="function-cycle-transfersformcycle-28314"></a><a href="#function-cycle-transfersformcycle-28314">transfersFormCycle</a></p>
+<blockquote>
+<p>: [<a href="#type-cycle-classtransfer-9450">ClassTransfer</a>] -&gt; Bool</p>
+<p>Cycle order validity
+It's in order in a line and for (end :: ... :: start :: [])
+we have end.have == start.want</p>
+</blockquote>
+<p><a name="function-cycle-transfersformchain-73223"></a><a href="#function-cycle-transfersformchain-73223">transfersFormChain</a></p>
+<blockquote>
+<p>: [<a href="#type-cycle-classtransfer-9450">ClassTransfer</a>] -&gt; Bool</p>
+<p>Linear order validity
+(x :: y :: xs) means x.want == y.have</p>
+</blockquote>
+<p><a name="function-cycle-uniqueclasses-83500"></a><a href="#function-cycle-uniqueclasses-83500">uniqueClasses</a></p>
+<blockquote>
+<p>: [<a href="#type-cycle-classtransfer-9450">ClassTransfer</a>] -&gt; Bool</p>
+<p>All classes are unique so the cycle can't be
+short-circuited</p>
+</blockquote>
+</body>
+</html>
