@@ -1,0 +1,86 @@
+module ClassSwap where
+
+{- = ClassSwap Workflow
+
+1. Student creates a pending class swap containing a swap with 
+all the correct parties and their own signature. [If they try to
+create and use a bad swap, it won't be accepted by any valid cycle
+and no valid swap will join a cycle made by it. This is because
+additions to a cycle check for agreement of the registrar and professors 
+across links.]
+2. Each party signs off
+3. The registrar creates the class swap subject to validity conditions.
+
+-}
+
+import Class (Class(..), ClassKey(..))
+import Data.Student (Student(..))
+
+import DA.Assert 
+import DA.Set (Set)
+import qualified DA.Set as Set 
+
+-- | A contract affirming a student is authorized to swap
+-- one class for another and participate in cycle trades
+template ClassSwap
+    with
+        currClassKey : ClassKey
+        wantClassKey : ClassKey
+        student : Student
+        registrar : Party
+        currProfessor : Party
+        advisor : Party
+    where 
+        signatory [registrar, currProfessor, advisor, student.party]
+
+-- | A contract to make a class swap once all the needed
+-- signatories have signed off. It uses a mix of a propose-accept
+-- and multi-party-agreement pattern.
+template ClassSwapPending
+    with
+        swap : ClassSwap
+        currentSigners : Set Party
+    where
+        signatory (Set.toList currentSigners)
+        observer (signatory swap)
+
+        choice ClassSwap_Sign : ContractId ClassSwapPending
+            with
+                signer : Party
+            controller signer 
+            do 
+                assert (signer `elem` (signatory swap))
+                assert (not $ Set.member signer currentSigners) 
+                let currentSigners = Set.insert signer this.currentSigners
+                create this with currentSigners 
+
+        choice ClassSwap_Finalize : ContractId ClassSwap 
+            controller swap.registrar 
+            do 
+                Set.fromList (signatory swap) === currentSigners
+                validateSwap swap >>= assertMsg "swap is not valid"
+                create swap
+        
+        choice ClassSwap_Abort : ()
+            with
+                party : Party 
+            controller party 
+            do 
+                assert (party `elem` (signatory swap))
+                archive self
+
+-- | Validity conditions for making a swap contract:
+-- Both classes exist as active, the professor matches the current class,
+-- the student is in the current class but not by a swap,
+-- the student is not in the other class, and both classes are not finalized.
+validateSwap : ClassSwap -> Update Bool
+validateSwap (ClassSwap {..}) = do
+    (_, currClass) <- fetchByKey @Class currClassKey
+    (_, wantClass) <- fetchByKey @Class wantClassKey
+    return $
+        (currProfessor == currClass.professor) &&
+        (Set.member student currClass.students) &&
+        not (Set.member student currClass.grantedSwap) &&
+        not (Set.member student wantClass.students) &&
+        not currClass.finalized &&
+        not wantClass.finalized

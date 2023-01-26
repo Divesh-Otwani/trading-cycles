@@ -1,0 +1,72 @@
+module Class where
+
+import Data.Function ((&))
+import Data.Student (Student)
+
+import DA.Set (Set)
+import qualified DA.Set as Set 
+
+{- | A Class Template
+
+    Class contracts represent classes that exist for the current semester.
+    The registrar can create a class, swap students, finialize the registration, or archive it
+    after the semester is over.
+
+-}
+template Class
+    with
+        bio : ClassBio
+        registrar : Party
+        professor : Party
+        students : Set Student
+        grantedSwap : Set Student
+        finalized : Bool
+    where
+    signatory registrar
+    observer professor :: (students & Set.toList & fmap (getField @"party"))
+    ensure
+        bio.uid >= 0 &&
+        Set.isSubsetOf grantedSwap students
+    key (ClassKey registrar bio.uid) : ClassKey
+    maintainer key.registrar
+
+    choice DropStudent : ContractId Class 
+        with 
+            student : Student
+        controller registrar
+        do 
+            assert (Set.member student students)
+            let students = Set.delete student this.students 
+            let grantedSwap = Set.delete student this.grantedSwap
+            create this with students; grantedSwap
+
+    choice AddStudent : ContractId Class 
+        with 
+            student : Student
+            fromTrade : Bool 
+        controller registrar 
+        do 
+            assert (not $ Set.member student students)
+            let students = Set.insert student this.students
+            let granted' = Set.insert student this.grantedSwap
+            let grantedSwap = if fromTrade then this.grantedSwap else granted'
+            create this with students; grantedSwap
+
+    choice CloseRegistration : ContractId Class 
+        controller registrar
+        do (create this with finalized = True)
+
+-- | A (registrar, uid) key for classes
+data ClassKey = ClassKey with
+    registrar : Party
+    uid : Int
+        deriving (Eq, Ord, Show)
+
+-- | A bio of a class that doesn't change
+-- across semesters
+data ClassBio = ClassBio with
+    title : Text
+    description : Text
+    code : Text 
+    uid : Int
+        deriving (Eq, Ord, Show)

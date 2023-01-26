@@ -1,0 +1,9 @@
+module Data.Function ((&), (&&&)) where
+
+infixl 1 &
+(&) : a -> (a -> b) -> b
+x & f = f x
+
+infixl 1 &&&
+(&&&) : (a -> Bool) -> (a -> Bool) -> (a -> Bool)
+(f &&& g) a = f a && g a

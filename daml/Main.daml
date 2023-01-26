@@ -1,0 +1,88 @@
+module Main where
+
+import Cycle
+import Class
+import ClassSwap
+import Data.Student
+
+import Daml.Script
+import qualified DA.Set as Set 
+import qualified DA.Map as Map
+
+setup : Script ()
+setup = return ()
+
+test : Script ()
+test = script do 
+    registrar <- allocateParty "Haverford Registrar"
+    divesh <- allocateParty "Divesh"    
+    gareth <- allocateParty "Gareth"
+    let sDivesh = Student "Divesh" divesh
+    let sGareth = Student "Gareth" gareth
+    profE <- allocateParty "Professor Eisenberg"
+    profW <- allocateParty "Professor Wonnacott"
+    
+    -- Create functional programming course
+    let title = "Functional Programming"
+    let description = "Introduction to Haskell"
+    let code = "CS341"
+    let bio = ClassBio title description code 0
+    let students = Set.singleton sDivesh
+    let currClass = Class bio registrar profE students Set.empty False 
+    c1 <- submit registrar (createCmd currClass)
+    
+    -- Create compilers course
+    let title = "Compilers"
+    let description = "Build a compiler in C for HERA"
+    let code = "CS382"
+    let bio = ClassBio title description code 1
+    let students = Set.singleton sGareth
+    let currClass = Class bio registrar profW students Set.empty False
+    c2 <- submit registrar (createCmd currClass)
+
+    -- Divesh has functional programming but wants
+    -- to take compilers. He creates a ClassSwap:
+    advisor <- allocateParty "Advisor"
+    let dHave = ClassKey registrar 0
+    let dWant = ClassKey registrar 1
+    let goalSwap = ClassSwap dHave dWant sDivesh registrar profE advisor
+    let pendingSwap = ClassSwapPending goalSwap (Set.singleton divesh)
+    pSwapId1 <- submit divesh (createCmd pendingSwap)
+    pSwapId2 <- submit profE (exerciseCmd pSwapId1 (ClassSwap_Sign profE))
+    pSwapId3 <- submit advisor (exerciseCmd pSwapId2 (ClassSwap_Sign advisor))
+    pSwapId <- submit registrar (exerciseCmd pSwapId3 (ClassSwap_Sign registrar))
+    swapIdDivesh <- submit registrar (exerciseCmd pSwapId ClassSwap_Finalize)
+    
+    -- Gareth has compilers but wants to take functional
+    -- programming. He creates a ClassSwap:
+    let gHave = ClassKey registrar 1
+    let gWant = ClassKey registrar 0
+    let goalSwap = ClassSwap gHave gWant sGareth registrar profW advisor
+    let pendingSwap = ClassSwapPending goalSwap (Set.singleton gareth)
+    pSwapId1 <- submit gareth (createCmd pendingSwap)
+    pSwapId2 <- submit profW (exerciseCmd pSwapId1 (ClassSwap_Sign profW))
+    pSwapId3 <- submit advisor (exerciseCmd pSwapId2 (ClassSwap_Sign advisor))
+    pSwapId <- submit registrar (exerciseCmd pSwapId3 (ClassSwap_Sign registrar))
+    swapIdGareth <- submit registrar (exerciseCmd pSwapId ClassSwap_Finalize)
+
+    -- Create a pending transfer and sign it
+    let transfer1 = ClassTransfer sDivesh dHave dWant 
+    let transfer2 = ClassTransfer sGareth gHave gWant 
+    let transfers = [transfer1, transfer2]
+    let goalCycle = Cycle transfers Map.empty registrar
+    let pendCycle = CyclePending goalCycle (Set.singleton divesh)
+    pCycleId1 <- submit divesh (createCmd pendCycle)
+    let witness1 = TransferWitness swapIdDivesh transfer1
+    let witness2 = TransferWitness swapIdGareth transfer2
+    let addWitness1 = CyclePending_TransferSign witness1
+    let addWitness2 = CyclePending_TransferSign witness2
+    pCycleId2 <- submit divesh (exerciseCmd pCycleId1 addWitness1)
+    pCycleId3 <- submit gareth (exerciseCmd pCycleId2 addWitness2)
+    let regSign = CyclePending_RegistrarSign
+    pCycleId4 <- submit registrar (exerciseCmd pCycleId3 regSign)
+    cycleId <- submit registrar (exerciseCmd pCycleId4 CyclePending_Finalize)
+
+    -- Execute the finalized cycle
+    result <- submit registrar (exerciseCmd cycleId TryExecute)
+    assert result
+    return ()

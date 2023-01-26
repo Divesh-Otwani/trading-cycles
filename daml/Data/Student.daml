@@ -1,0 +1,6 @@
+module Data.Student (Student(..)) where
+
+data Student = Student with
+    name : Text
+    party : Party
+        deriving (Eq, Ord, Show)
