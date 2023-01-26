@@ -23,6 +23,7 @@ import qualified DA.Set as Set
 import DA.Map (Map)
 import qualified DA.Map as Map 
 import DA.Foldable (mapA_)
+import DA.Functor (void)
 
 -- | A lightweight represenation of a student's
 -- transfer of losing a class they have and gaining
@@ -79,9 +80,10 @@ executeCycle = mapA_ executeTransfer
         executeTransfer : ClassTransfer -> Update ()
         executeTransfer (ClassTransfer {..}) = do 
             let fromTrade = True
-            exerciseByKey @Class have (DropStudent with student)
-            exerciseByKey @Class want (AddStudent with student; fromTrade)
-            return ()
+            let dropRecord = DropStudent with student 
+            let addRecord = AddStudent with student; fromTrade  
+            void $ exerciseByKey @Class have dropRecord
+            void $ exerciseByKey @Class want addRecord
 
 -- | Get all the students parties in a list of class transfers
 partiesOfTransfers : [ClassTransfer] -> Set Party

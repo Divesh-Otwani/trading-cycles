@@ -8,6 +8,7 @@ import Data.Student
 import Daml.Script
 import qualified DA.Set as Set 
 import qualified DA.Map as Map
+import DA.Functor (void)
 
 setup : Script ()
 setup = return ()
@@ -29,7 +30,7 @@ test = script do
     let bio = ClassBio title description code 0
     let students = Set.singleton sDivesh
     let currClass = Class bio registrar profE students Set.empty False 
-    c1 <- submit registrar (createCmd currClass)
+    void $ submit registrar (createCmd currClass)
     
     -- Create compilers course
     let title = "Compilers"
@@ -38,7 +39,7 @@ test = script do
     let bio = ClassBio title description code 1
     let students = Set.singleton sGareth
     let currClass = Class bio registrar profW students Set.empty False
-    c2 <- submit registrar (createCmd currClass)
+    void $ submit registrar (createCmd currClass)
 
     -- Divesh has functional programming but wants
     -- to take compilers. He creates a ClassSwap:
