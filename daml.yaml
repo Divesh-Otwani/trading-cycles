@@ -6,6 +6,16 @@ name: trading-cycles
 source: daml
 init-script: Main:setup
 version: 0.0.1
+exposed-modules:
+  - CyclicTrading
+build-options:
+  - --ghc-option=-Wunused-top-binds
+  - --ghc-option=-Wunused-matches
+  - --ghc-option=-Wunused-do-bind
+  - --ghc-option=-Wincomplete-uni-patterns
+  - --ghc-option=-Wredundant-constraints
+  - --ghc-option=-Wmissing-signatures
+  - --ghc-option=-Werror
 dependencies:
   - daml-prim
   - daml-stdlib

@@ -1,15 +1,18 @@
-module Cycle where
-
-{- = Cycle Workflow
-
-1. Some student creates a cycle proposal holding a cycle contract with all the 
-expected trades
-2. All students sign off, once per transfer they are involved in,
-and add their corresponding ClassSwap.
-3. The registrar makes a Cycle
-4. The registrar trys to execute the Cycle and if it fails, just archives it
-
--}
+module Cycle 
+    ( 
+    -- * Cycles
+    ClassTransfer (..)
+    , Cycle (..)
+    , TryExecute (..)
+    -- Pending Cycles
+    , TransferWitness (..)
+    , CyclePending (..)
+    , CyclePending_RegistrarSign (..)
+    , CyclePending_TransferSign (..)
+    , CyclePending_Abort (..)
+    , CyclePending_Finalize (..)
+    )
+where
 
 import Class 
 import ClassSwap
@@ -23,6 +26,21 @@ import qualified DA.Set as Set
 import DA.Map (Map)
 import qualified DA.Map as Map 
 import DA.Foldable (mapA_)
+import DA.Functor (void)
+
+{- |
+
+Cycle Workflow
+
+1. Some student creates a cycle proposal holding a cycle contract with all the 
+expected trades
+2. All students sign off, once per transfer they are involved in,
+and add their corresponding ClassSwap.
+3. The registrar makes a Cycle
+4. The registrar trys to execute the Cycle and if it fails, just archives it
+
+-}
+
 
 -- | A lightweight represenation of a student's
 -- transfer of losing a class they have and gaining
@@ -61,13 +79,18 @@ template Cycle
 -- has it's own integrity (see @ClassSwap.validateSwap@).
 swapPairValid : Party -> (ClassTransfer, ContractId ClassSwap) -> Update ()
 swapPairValid reg (tf, swapId) = do 
+    validTransferWitness reg (TransferWitness swapId tf)
     swap <- fetch swapId
-    swap.currClassKey === tf.have 
-    swap.wantClassKey === tf.want 
-    swap.student === tf.student
-    reg === swap.registrar
     validateSwap swap >>= assert
     return ()
+
+validTransferWitness : Party -> TransferWitness -> Update ()
+validTransferWitness registrar (TransferWitness {..}) = do
+    swap <- fetch swapId
+    swap.currClassKey === transfer.have 
+    swap.wantClassKey === transfer.want 
+    swap.student === transfer.student
+    registrar === swap.registrar
 
 -- | Drop and add classes according to the transfers,
 -- failing if the class state has changed in the meantime
@@ -79,9 +102,10 @@ executeCycle = mapA_ executeTransfer
         executeTransfer : ClassTransfer -> Update ()
         executeTransfer (ClassTransfer {..}) = do 
             let fromTrade = True
-            exerciseByKey @Class have (DropStudent with student)
-            exerciseByKey @Class want (AddStudent with student; fromTrade)
-            return ()
+            let dropRecord = DropStudent with student 
+            let addRecord = AddStudent with student; fromTrade  
+            void $ exerciseByKey @Class have dropRecord
+            void $ exerciseByKey @Class want addRecord
 
 -- | Get all the students parties in a list of class transfers
 partiesOfTransfers : [ClassTransfer] -> Set Party
@@ -111,6 +135,15 @@ transfersFormChain _ = True
 uniqueClasses : [ClassTransfer] -> Bool 
 uniqueClasses = unique . fmap (getField @"have")
 
+-- | A witness by which a ClassTransfer is validated
+-- It is checked when added to a cycle, so students in a cycle
+-- can be sure that when anyone joins, they aren't joining
+-- in a dishonest way
+data TransferWitness = TransferWitness with 
+    swapId : ContractId ClassSwap 
+    transfer : ClassTransfer 
+        deriving (Eq, Ord, Show)
+
 -- | A contract for making a cycle once each
 -- ClassTransfer has a corresponding ContractId ClassSwap
 -- and all the signatories have been added to haveSigned
@@ -138,6 +171,7 @@ template CyclePending
                 let TransferWitness {..} = witness
                 assert (transfer `elem` cycle.transfers)
                 assert (not $ Map.member transfer cycle.matchingSwaps)
+                validTransferWitness cycle.registrar witness
                 let matchingSwaps = Map.insert transfer swapId cycle.matchingSwaps
                 let cycle = this.cycle with matchingSwaps
                 let haveSigned = Set.insert transfer.student.party this.haveSigned
@@ -157,10 +191,3 @@ template CyclePending
                 haveSigned === Set.fromList (signatory cycle)
                 assert (all (`Map.member` cycle.matchingSwaps) cycle.transfers)
                 create cycle
-
--- | A witness by which a ClassTransfer is validated
--- This is not checked upon adding it to a cycle, but on executing
-data TransferWitness = TransferWitness with 
-    swapId : ContractId ClassSwap 
-    transfer : ClassTransfer 
-        deriving (Eq, Ord, Show)

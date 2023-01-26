@@ -1,0 +1,153 @@
+<html>
+<head><title>trading-cycles</title><meta charset="utf-8"></head>
+<body><h1><a name="module-classswap-81723"></a>Module ClassSwap</h1>
+<h2>Templates</h2>
+<p><a name="type-classswap-classswap-72105"></a><strong>template</strong> <a href="#type-classswap-classswap-72105">ClassSwap</a></p>
+<blockquote>
+<p>ClassSwap Workflow</p>
+<ol>
+<li>Student creates a pending class swap containing a swap with
+all the correct parties and their own signature. [If they try to
+create and use a bad swap, it won't be accepted by any valid cycle
+and no valid swap will join a cycle made by it. This is because
+additions to a cycle check for agreement of the registrar and professors
+across links.]</li>
+<li>Each party signs off</li>
+<li>The registrar creates the class swap subject to validity conditions.
+A contract affirming a student is authorized to swap
+one class for another and participate in cycle trades</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">currClassKey</td>
+<td align="left"><a href="Class.html#type-class-classkey-47315">ClassKey</a></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">wantClassKey</td>
+<td align="left"><a href="Class.html#type-class-classkey-47315">ClassKey</a></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">student</td>
+<td align="left"><a href="Data-Student.html#type-data-student-student-55208">Student</a></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">registrar</td>
+<td align="left">Party</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">currProfessor</td>
+<td align="left">Party</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">advisor</td>
+<td align="left">Party</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>
+<p><strong>Choice Archive</strong></p>
+<p>(no fields)</p>
+</li>
+</ul>
+</blockquote>
+<p><a name="type-classswap-classswappending-40631"></a><strong>template</strong> <a href="#type-classswap-classswappending-40631">ClassSwapPending</a></p>
+<blockquote>
+<p>A contract to make a class swap once all the needed
+signatories have signed off. It uses a mix of a propose-accept
+and multi-party-agreement pattern.</p>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">swap</td>
+<td align="left"><a href="#type-classswap-classswap-72105">ClassSwap</a></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">currentSigners</td>
+<td align="left">Set Party</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>
+<p><strong>Choice Archive</strong></p>
+<p>(no fields)</p>
+</li>
+<li>
+<p><strong>Choice ClassSwap_Abort</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">party</td>
+<td align="left">Party</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p><strong>Choice ClassSwap_Finalize</strong></p>
+<p>(no fields)</p>
+</li>
+<li>
+<p><strong>Choice ClassSwap_Sign</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">signer</td>
+<td align="left">Party</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+</blockquote>
+<h2>Functions</h2>
+<p><a name="function-classswap-validateswap-49294"></a><a href="#function-classswap-validateswap-49294">validateSwap</a></p>
+<blockquote>
+<p>: <a href="#type-classswap-classswap-72105">ClassSwap</a> -&gt; Update Bool</p>
+<p>Validity conditions for making a swap contract:
+Both classes exist as active, the professor matches the current class,
+the student is in the current class but not by a swap,
+the student is not in the other class, and both classes are not finalized.</p>
+</blockquote>
+</body>
+</html>

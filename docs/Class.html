@@ -1,0 +1,202 @@
+<html>
+<head><title>trading-cycles</title><meta charset="utf-8"></head>
+<body><h1><a name="module-class-5316"></a>Module Class</h1>
+<h2>Templates</h2>
+<p><a name="type-class-class-70181"></a><strong>template</strong> <a href="#type-class-class-70181">Class</a></p>
+<blockquote>
+<p>A Class Template</p>
+<p>Class contracts represent classes that exist for the current semester.
+The registrar can create a class, swap students, finialize the registration, or archive it
+after the semester is over.</p>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">bio</td>
+<td align="left"><a href="#type-class-classbio-22732">ClassBio</a></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">registrar</td>
+<td align="left">Party</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">professor</td>
+<td align="left">Party</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">students</td>
+<td align="left">Set <a href="Data-Student.html#type-data-student-student-55208">Student</a></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">grantedSwap</td>
+<td align="left">Set <a href="Data-Student.html#type-data-student-student-55208">Student</a></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">finalized</td>
+<td align="left">Bool</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>
+<p><strong>Choice AddStudent</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">student</td>
+<td align="left"><a href="Data-Student.html#type-data-student-student-55208">Student</a></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">fromTrade</td>
+<td align="left">Bool</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p><strong>Choice Archive</strong></p>
+<p>(no fields)</p>
+</li>
+<li>
+<p><strong>Choice CloseRegistration</strong></p>
+<p>(no fields)</p>
+</li>
+<li>
+<p><strong>Choice DropStudent</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">student</td>
+<td align="left"><a href="Data-Student.html#type-data-student-student-55208">Student</a></td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+</blockquote>
+<h2>Data Types</h2>
+<p><a name="type-class-classbio-22732"></a><strong>data</strong> <a href="#type-class-classbio-22732">ClassBio</a></p>
+<blockquote>
+<p>A bio of a class that doesn't change
+across semesters</p>
+<p><a name="constr-class-classbio-58973"></a><a href="#constr-class-classbio-58973">ClassBio</a></p>
+<blockquote>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">title</td>
+<td align="left">Text</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">description</td>
+<td align="left">Text</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">code</td>
+<td align="left">Text</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">uid</td>
+<td align="left">Int</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p><strong>instance</strong> Eq <a href="#type-class-classbio-22732">ClassBio</a></p>
+<p><strong>instance</strong> Ord <a href="#type-class-classbio-22732">ClassBio</a></p>
+<p><strong>instance</strong> Show <a href="#type-class-classbio-22732">ClassBio</a></p>
+<p><strong>instance</strong> HasField &quot;bio&quot; <a href="#type-class-class-70181">Class</a> <a href="#type-class-classbio-22732">ClassBio</a></p>
+<p><strong>instance</strong> HasField &quot;code&quot; <a href="#type-class-classbio-22732">ClassBio</a> Text</p>
+<p><strong>instance</strong> HasField &quot;description&quot; <a href="#type-class-classbio-22732">ClassBio</a> Text</p>
+<p><strong>instance</strong> HasField &quot;title&quot; <a href="#type-class-classbio-22732">ClassBio</a> Text</p>
+<p><strong>instance</strong> HasField &quot;uid&quot; <a href="#type-class-classbio-22732">ClassBio</a> Int</p>
+</blockquote>
+<p><a name="type-class-classkey-47315"></a><strong>data</strong> <a href="#type-class-classkey-47315">ClassKey</a></p>
+<blockquote>
+<p>A (registrar, uid) key for classes</p>
+<p><a name="constr-class-classkey-65042"></a><a href="#constr-class-classkey-65042">ClassKey</a></p>
+<blockquote>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">registrar</td>
+<td align="left">Party</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">uid</td>
+<td align="left">Int</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p><strong>instance</strong> Eq <a href="#type-class-classkey-47315">ClassKey</a></p>
+<p><strong>instance</strong> Ord <a href="#type-class-classkey-47315">ClassKey</a></p>
+<p><strong>instance</strong> Show <a href="#type-class-classkey-47315">ClassKey</a></p>
+<p><strong>instance</strong> HasField &quot;currClassKey&quot; <a href="ClassSwap.html#type-classswap-classswap-72105">ClassSwap</a> <a href="#type-class-classkey-47315">ClassKey</a></p>
+<p><strong>instance</strong> HasField &quot;have&quot; <a href="Cycle.html#type-cycle-classtransfer-9450">ClassTransfer</a> <a href="#type-class-classkey-47315">ClassKey</a></p>
+<p><strong>instance</strong> HasField &quot;registrar&quot; <a href="#type-class-classkey-47315">ClassKey</a> Party</p>
+<p><strong>instance</strong> HasField &quot;uid&quot; <a href="#type-class-classkey-47315">ClassKey</a> Int</p>
+<p><strong>instance</strong> HasField &quot;want&quot; <a href="Cycle.html#type-cycle-classtransfer-9450">ClassTransfer</a> <a href="#type-class-classkey-47315">ClassKey</a></p>
+<p><strong>instance</strong> HasField &quot;wantClassKey&quot; <a href="ClassSwap.html#type-classswap-classswap-72105">ClassSwap</a> <a href="#type-class-classkey-47315">ClassKey</a></p>
+<p><strong>instance</strong> HasExerciseByKey <a href="#type-class-class-70181">Class</a> <a href="#type-class-classkey-47315">ClassKey</a> AddStudent (ContractId <a href="#type-class-class-70181">Class</a>)</p>
+<p><strong>instance</strong> HasExerciseByKey <a href="#type-class-class-70181">Class</a> <a href="#type-class-classkey-47315">ClassKey</a> CloseRegistration (ContractId <a href="#type-class-class-70181">Class</a>)</p>
+<p><strong>instance</strong> HasExerciseByKey <a href="#type-class-class-70181">Class</a> <a href="#type-class-classkey-47315">ClassKey</a> DropStudent (ContractId <a href="#type-class-class-70181">Class</a>)</p>
+<p><strong>instance</strong> HasExerciseByKey <a href="#type-class-class-70181">Class</a> <a href="#type-class-classkey-47315">ClassKey</a> Archive ()</p>
+<p><strong>instance</strong> HasFetchByKey <a href="#type-class-class-70181">Class</a> <a href="#type-class-classkey-47315">ClassKey</a></p>
+<p><strong>instance</strong> HasFromAnyContractKey <a href="#type-class-class-70181">Class</a> <a href="#type-class-classkey-47315">ClassKey</a></p>
+<p><strong>instance</strong> HasKey <a href="#type-class-class-70181">Class</a> <a href="#type-class-classkey-47315">ClassKey</a></p>
+<p><strong>instance</strong> HasLookupByKey <a href="#type-class-class-70181">Class</a> <a href="#type-class-classkey-47315">ClassKey</a></p>
+<p><strong>instance</strong> HasMaintainer <a href="#type-class-class-70181">Class</a> <a href="#type-class-classkey-47315">ClassKey</a></p>
+<p><strong>instance</strong> HasToAnyContractKey <a href="#type-class-class-70181">Class</a> <a href="#type-class-classkey-47315">ClassKey</a></p>
+</blockquote>
+</body>
+</html>
